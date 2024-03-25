@@ -1,0 +1,13 @@
+names:
+- Gun
+- Bullet
+- Hand Axe
+- knife
+- Person
+- dog
+- cat
+- food
+nc: 8
+path: ../Dataset
+train: train/images
+val: valid/images
