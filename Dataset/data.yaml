@@ -4,10 +4,7 @@ names:
 - Hand Axe
 - knife
 - Person
-- dog
-- cat
-- food
-nc: 8
+nc: 5
 path: ../Dataset
 train: train/images
 val: valid/images

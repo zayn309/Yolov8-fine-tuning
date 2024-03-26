@@ -31,7 +31,6 @@ def add_names_window():
         name_entry = tk.Entry(name_frame, width=30)
         name_entry.pack(side="left")
         name_entries.append(name_entry)
-        
     
     # Add initial name entry
     add_name_entry()
@@ -49,9 +48,9 @@ def add_names_window():
         update_yaml(data)
         names_window.destroy()
 
-        
     close_button = tk.Button(names_window, text="Close", command=close_window)
     close_button.pack(pady=10)
+
 
 def add_data(image_path, label_path, valid_portion):
     # validate input paths
@@ -90,10 +89,27 @@ def add_data(image_path, label_path, valid_portion):
 
 def get_paths_window(callback):
     def on_close():
+        paths_window.destroy()
+
+    def trigger_callback():
         # Extract data from entries
         image_path = image_entry.get()
         label_path = label_entry.get()
-        valid_portion = float(valid_entry.get())
+        valid_portion = valid_entry.get()
+
+        # Check if any field is empty
+        if not image_path or not label_path or not valid_portion:
+            messagebox.showerror("Error", "Please fill in all the fields.")
+            return
+
+        # Check if valid_portion is a float
+        try:
+            valid_portion = float(valid_portion)
+            if not 0 <= valid_portion <= 1:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Error", "Valid portion must be a float between 0.0 and 1.0.")
+            return
         
         # Call the callback function with extracted data
         callback(image_path, label_path, valid_portion)
@@ -136,10 +152,13 @@ def get_paths_window(callback):
     valid_entry = tk.Entry(valid_frame, width=10)
     valid_entry.pack(side="left")
     
-    
     # Add data button
-    add_button = tk.Button(main_frame, text="Add Data", command=on_close)
+    add_button = tk.Button(main_frame, text="Add Data", command=trigger_callback)
     add_button.pack()
+
+    # Close button
+    close_button = tk.Button(main_frame, text="Close", command=on_close)
+    close_button.pack()
 
 # Create GUI window
 root = tk.Tk()
@@ -147,7 +166,7 @@ root.title("Data Management")
 root.geometry("400x200")  # Set window size
 
 # Add names button
-add_names_button = tk.Button(root, text="Add Names")
+add_names_button = tk.Button(root, text="Add Names", command=add_names_window)
 add_names_button.pack(pady=10)
 
 # Get paths and move data button
